@@ -1,0 +1,3 @@
+theme: minima
+title: "GR00T Compression Suite"
+description: "Trajectory compression experiments on GR00T using FP16, pruning, and distillation."
