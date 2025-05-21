@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GR00T Trajectory Compression</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 2rem;
+      background-color: #f8f9fa;
+      color: #212529;
+    }
+    h1, h2, h3 {
+      color: #003366;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 2rem;
+    }
+    table, th, td {
+      border: 1px solid #ddd;
+    }
+    th, td {
+      padding: 0.75rem;
+      text-align: left;
+    }
+    figure {
+      margin: 2rem 0;
+      text-align: center;
+    }
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+    .section {
+      margin-bottom: 3rem;
+    }
+    code {
+      background-color: #e9ecef;
+      padding: 0.2rem 0.4rem;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <h1>GR00T Trajectory Compression</h1>
+
+  <p>This page documents the training configuration and compression techniques used in the GR00T KUKA trajectory experiments.</p>
+
+  
+<section class="section">
+  <h2>Appendix A. Training Configuration</h2>
+  <table>
+    <caption><strong>Table A1: Key Training Parameters for GR00T Fine-tuning</strong></caption>
+    <thead>
+      <tr><th>Category</th><th>Parameter</th><th>Value</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Max steps</td><td><code>max_steps</code></td><td><code>5000</code></td></tr>
+      <tr><td>Learning rate</td><td><code>learning_rate</code></td><td><code>0.0001</code></td></tr>
+      <tr><td>Weight decay</td><td><code>weight_decay</code></td><td><code>1e-5</code></td></tr>
+      <tr><td>Warmup ratio</td><td><code>warmup_ratio</code></td><td><code>0.05</code></td></tr>
+      <tr><td>Save steps</td><td><code>save_steps</code></td><td><code>500</code></td></tr>
+      <tr><td>Resume training</td><td><code>resume</code></td><td><code>False</code></td></tr>
+      <tr><td>Optimizer</td><td><code>optim</code></td><td><code>adamw_torch</code></td></tr>
+      <tr><td>Adam β1</td><td><code>adam_beta1</code></td><td><code>0.95</code></td></tr>
+      <tr><td>Adam β2</td><td><code>adam_beta2</code></td><td><code>0.999</code></td></tr>
+      <tr><td>Adam ϵ</td><td><code>adam_epsilon</code></td><td><code>1e-8</code></td></tr>
+      <tr><td>Scheduler</td><td><code>lr_scheduler_type</code></td><td><code>cosine</code></td></tr>
+      <tr><td>Use mixed precision</td><td><code>bf16</code></td><td><code>True</code></td></tr>
+      <tr><td>Accumulation</td><td><code>gradient_accumulation_steps</code></td><td><code>1</code></td></tr>
+    </tbody>
+  </table>
+  <figure>
+    <img src="G1.png" alt="Training Loss Curve Behavior">
+    <figcaption><strong>Figure A1:</strong> Training Loss Curve Behavior</figcaption>
+  </figure>
+  <figure>
+    <img src="G2.png" alt="Gradient Norm Observations">
+    <figcaption><strong>Figure A2:</strong> Gradient Norm Observations</figcaption>
+  </figure>
+  <figure>
+    <img src="G3.png" alt="Training Schedule Insight (Learning Rate)">
+    <figcaption><strong>Figure A3:</strong> Training Schedule Insight (Learning Rate)</figcaption>
+  </figure>
+</section>
+
+
+</body>
+</html>
