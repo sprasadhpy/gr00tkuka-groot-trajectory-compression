@@ -1,37 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>From Language to Action: Vision-Language-Action Task Spaces in Construction Robotics</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      line-height: 1.6;
       margin: 0;
+      font-family: 'Helvetica Neue', sans-serif;
+      background-color: #ffffff;
+      color: #333;
+      line-height: 1.6;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
       padding: 2rem;
-      background-color: #f8f9fa;
-      color: #212529;
     }
-    h1, h2, h3 {
-      color: #003366;
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      color: #222;
     }
-    .logo-container {
+    .logo-row {
       display: flex;
       gap: 2rem;
-      justify-content: left;
       align-items: center;
-      margin: 1.5rem 0;
+      margin: 1rem 0 2rem;
     }
-    .logo-container img {
+    .logo-row img {
       height: 60px;
       object-fit: contain;
-      background: white;
-      padding: 0.5rem;
-      border-radius: 8px;
+    }
+    section {
+      margin-bottom: 3rem;
+    }
+    h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      color: #444;
     }
     table {
-      width: 70%;
+      width: 100%;
       font-size: 0.9rem;
       border-collapse: collapse;
       margin-bottom: 2rem;
@@ -44,71 +54,73 @@
       text-align: left;
     }
     figure {
-      margin: 2rem auto;
-      width: 60%;
+      margin: 2rem 0;
       text-align: center;
     }
     figure img {
       max-width: 100%;
       height: auto;
     }
-    .section {
-      margin-bottom: 3rem;
+    figcaption {
+      font-size: 0.85rem;
+      color: #666;
     }
     code {
-      background-color: #e9ecef;
+      background-color: #f0f0f0;
       padding: 0.2rem 0.4rem;
       border-radius: 4px;
+      font-family: monospace;
     }
   </style>
 </head>
 <body>
-  <h1>From Language to Action: Vision-Language-Action Task Spaces in Construction Robotics</h1>
+  <div class="container">
+    <h1>From Language to Action: Vision-Language-Action Task Spaces in Construction Robotics</h1>
 
-  <div class="logo-container">
-    <img src="images.png" alt="UCL Logo">
-    <img src="KingstonUniLogo.png" alt="Kingston University London Logo">
+    <div class="logo-row">
+      <img src="images.png" alt="UCL Logo">
+      <img src="KingstonUniLogo.png" alt="Kingston University London Logo">
+    </div>
+
+    <p>This page documents the training configuration and compression techniques used in the GR00T KUKA trajectory experiments.</p>
+
+    <section>
+      <h2>Appendix A. Training Configuration</h2>
+      <table>
+        <caption><strong>Table A1: Key Training Parameters for GR00T Fine-tuning</strong></caption>
+        <thead>
+          <tr><th>Category</th><th>Parameter</th><th>Value</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Max steps</td><td><code>max_steps</code></td><td><code>5000</code></td></tr>
+          <tr><td>Learning rate</td><td><code>learning_rate</code></td><td><code>0.0001</code></td></tr>
+          <tr><td>Weight decay</td><td><code>weight_decay</code></td><td><code>1e-5</code></td></tr>
+          <tr><td>Warmup ratio</td><td><code>warmup_ratio</code></td><td><code>0.05</code></td></tr>
+          <tr><td>Save steps</td><td><code>save_steps</code></td><td><code>500</code></td></tr>
+          <tr><td>Resume training</td><td><code>resume</code></td><td><code>False</code></td></tr>
+          <tr><td>Optimizer</td><td><code>optim</code></td><td><code>adamw_torch</code></td></tr>
+          <tr><td>Adam β1</td><td><code>adam_beta1</code></td><td><code>0.95</code></td></tr>
+          <tr><td>Adam β2</td><td><code>adam_beta2</code></td><td><code>0.999</code></td></tr>
+          <tr><td>Adam ϵ</td><td><code>adam_epsilon</code></td><td><code>1e-8</code></td></tr>
+          <tr><td>Scheduler</td><td><code>lr_scheduler_type</code></td><td><code>cosine</code></td></tr>
+          <tr><td>Use mixed precision</td><td><code>bf16</code></td><td><code>True</code></td></tr>
+          <tr><td>Accumulation</td><td><code>gradient_accumulation_steps</code></td><td><code>1</code></td></tr>
+        </tbody>
+      </table>
+
+      <figure>
+        <img src="G1.png" alt="Training Loss Curve Behavior">
+        <figcaption><strong>Figure A1:</strong> Training Loss Curve Behavior</figcaption>
+      </figure>
+      <figure>
+        <img src="G2.png" alt="Gradient Norm Observations">
+        <figcaption><strong>Figure A2:</strong> Gradient Norm Observations</figcaption>
+      </figure>
+      <figure>
+        <img src="G3.png" alt="Training Schedule Insight (Learning Rate)">
+        <figcaption><strong>Figure A3:</strong> Training Schedule Insight (Learning Rate)</figcaption>
+      </figure>
+    </section>
   </div>
-
-  <p>This page documents the training configuration and compression techniques used in the GR00T KUKA trajectory experiments.</p>
-
-  <section class="section">
-    <h2>Appendix A. Training Configuration</h2>
-    <table>
-      <caption><strong>Table A1: Key Training Parameters for GR00T Fine-tuning</strong></caption>
-      <thead>
-        <tr><th>Category</th><th>Parameter</th><th>Value</th></tr>
-      </thead>
-      <tbody>
-        <tr><td>Max steps</td><td><code>max_steps</code></td><td><code>5000</code></td></tr>
-        <tr><td>Learning rate</td><td><code>learning_rate</code></td><td><code>0.0001</code></td></tr>
-        <tr><td>Weight decay</td><td><code>weight_decay</code></td><td><code>1e-5</code></td></tr>
-        <tr><td>Warmup ratio</td><td><code>warmup_ratio</code></td><td><code>0.05</code></td></tr>
-        <tr><td>Save steps</td><td><code>save_steps</code></td><td><code>500</code></td></tr>
-        <tr><td>Resume training</td><td><code>resume</code></td><td><code>False</code></td></tr>
-        <tr><td>Optimizer</td><td><code>optim</code></td><td><code>adamw_torch</code></td></tr>
-        <tr><td>Adam β1</td><td><code>adam_beta1</code></td><td><code>0.95</code></td></tr>
-        <tr><td>Adam β2</td><td><code>adam_beta2</code></td><td><code>0.999</code></td></tr>
-        <tr><td>Adam ϵ</td><td><code>adam_epsilon</code></td><td><code>1e-8</code></td></tr>
-        <tr><td>Scheduler</td><td><code>lr_scheduler_type</code></td><td><code>cosine</code></td></tr>
-        <tr><td>Use mixed precision</td><td><code>bf16</code></td><td><code>True</code></td></tr>
-        <tr><td>Accumulation</td><td><code>gradient_accumulation_steps</code></td><td><code>1</code></td></tr>
-      </tbody>
-    </table>
-
-    <figure>
-      <img src="G1.png" alt="Training Loss Curve Behavior">
-      <figcaption><strong>Figure A1:</strong> Training Loss Curve Behavior</figcaption>
-    </figure>
-    <figure>
-      <img src="G2.png" alt="Gradient Norm Observations">
-      <figcaption><strong>Figure A2:</strong> Gradient Norm Observations</figcaption>
-    </figure>
-    <figure>
-      <img src="G3.png" alt="Training Schedule Insight (Learning Rate)">
-      <figcaption><strong>Figure A3:</strong> Training Schedule Insight (Learning Rate)</figcaption>
-    </figure>
-  </section>
-
 </body>
 </html>
