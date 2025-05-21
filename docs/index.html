@@ -200,5 +200,77 @@
     </figure>
     </div>
   </section>
+  <section class="container">
+  <h2>Dataset Info (<code>info.json</code>)</h2>
+  <ul>
+    <li><strong>Robot type:</strong> <code>KUKA_KR60HA</code></li>
+    <li><strong>Codebase version:</strong> <code>v2.0</code></li>
+    <li><strong>Total episodes:</strong> 31</li>
+    <li><strong>Total frames:</strong> 28,072</li>
+    <li><strong>Chunks:</strong> 1 (<code>chunks_size</code>: 1000)</li>
+    <li><strong>FPS:</strong> 20 Hz</li>
+    <li><strong>Data path:</strong><br>
+      <small><code>data/chunk-{episode_chunk:03d}/episode_{episode_index:06d}.parquet</code></small>
+    </li>
+    <li><strong>Video path:</strong><br>
+      <small><code>videos/chunk-{episode_chunk:03d}/{video_key}_{episode_index:06d}.mp4</code></small>
+    </li>
+    <li><strong>Splits:</strong> <code>train: 0:31</code></li>
+    <li><strong>Features:</strong>
+      <ul>
+        <li><code>observation.state</code>: 7-DoF joint state (<code>float32</code>)</li>
+        <li><code>action</code>: corresponding 7-DoF joint commands (<code>float32</code>)</li>
+        <li><code>observation.images.webcam</code>: 480 × 640 × 3 RGB video, 20 fps, <code>mp4v</code> codec</li>
+        <li><code>timestamp</code>, <code>frame_index</code>, <code>task_index</code>, <code>episode_index</code>, <code>index</code>: metadata fields</li>
+      </ul>
+    </li>
+  </ul>
+
+  <h2>Episodes Metadata (<code>episodes.jsonl</code>)</h2>
+  <p>Each entry includes:</p>
+  <ul>
+    <li><code>episode_index</code>: Unique episode identifier</li>
+    <li><code>length</code>: Number of frames (range: 750–830)</li>
+    <li><code>tasks</code>: Natural language description of the task<br>
+      <em>Example:</em> “Pick up the boxes and place them in the container.”
+    </li>
+  </ul>
+
+  <h2>Episode Statistics (<code>episodes_stats.jsonl</code>)</h2>
+  <p>Contains descriptive statistics per episode for key fields:</p>
+  <ul>
+    <li><code>action</code> and <code>observation.state</code>: min, max, mean, std over each joint</li>
+    <li><code>timestamp</code>: duration per episode, typically 38–41 seconds</li>
+    <li><code>frame_index</code>, <code>index</code>: range and spread of frame indices</li>
+  </ul>
+
+  <h2>Task Descriptors (<code>tasks.jsonl</code>)</h2>
+  <ul>
+    <li>Maps each <code>task_index</code> to a human-readable <code>task</code> string</li>
+    <li>Dataset contains a single consistent task: “Pick up the boxes and place them in the container.”</li>
+  </ul>
+
+  <p>Our metadata organization of the dataset ensures high transparency and accessibility for downstream applications such as imitation learning, multimodal representation learning, and policy grounding in vision-language-action spaces.</p>
+</section>
+
+<section class="container">
+  <h2>Trajectory Analysis on a Representative Episode</h2>
+
+  <figure>
+    <img src="D1.png" alt="Observation state over time" style="width: 100%;">
+    <figcaption><strong>Figure D1:</strong> Observation state dimensions over time for one episode. Joint 6 shows periodic high-amplitude motion, indicating a dominant role in task execution.</figcaption>
+  </figure>
+
+  <figure>
+    <img src="D2.png" alt="Action dimensions over time" style="width: 100%;">
+    <figcaption><strong>Figure D2:</strong> Action dimensions over time for the same episode. The pattern closely follows the observation state, indicating strong controller consistency.</figcaption>
+  </figure>
+
+  <figure>
+    <img src="D3.png" alt="State-action correlation heatmap" style="width: 100%;">
+    <figcaption><strong>Figure D3:</strong> Correlation heatmap between state and action dimensions. Diagonal and near-diagonal dominance suggests joint-wise coupling and structured control policies.</figcaption>
+  </figure>
+</section>
+
 </body>
 </html>
