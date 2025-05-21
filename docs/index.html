@@ -84,10 +84,10 @@
       <img src="KingstonUniLogo.png" alt="Kingston University London Logo">
     </div>
 
-    <p>This page documents the training configuration and compression techniques used in the GR00T KUKA trajectory experiments.</p>
+    <p>This page documents the training configuration and compression techniques used in the GR00T KUKA  experiments.</p>
 
     <section>
-      <h2>Appendix A. Training Configuration</h2>
+      <h2> Training Configuration</h2>
       <table>
         <caption><strong>Table A1: Key Training Parameters for GR00T Fine-tuning</strong></caption>
         <thead>
@@ -125,4 +125,101 @@
     </section>
   </div>
 </body>
+  <section>
+  <h2> Compressed Models Configuration</h2>
+
+  <table>
+    <caption><strong>Table A2: FP16 Half-Precision</strong></caption>
+    <tr><th>Parameter</th><th>Value</th></tr>
+    <tr><td>Total DiT Parameters</td><td>537,803,776</td></tr>
+    <tr><td>Number of Transformer Layers (Vision)</td><td>24</td></tr>
+    <tr><td>Compression Technique</td><td>FP32 → FP16 via <code>PyTorch .half()</code></td></tr>
+    <tr><td>Serialization Format</td><td><code>safetensors</code>, <code>dtype = float16</code></td></tr>
+    <tr><td>Average Weight Change (802 params)</td><td>0.0000%</td></tr>
+  </table>
+
+  <table>
+    <caption><strong>Table A3: 50% L1 Magnitude Pruning</strong></caption>
+    <tr><th>Component</th><th>Layer / Detail</th><th>Pruned Weights (%)</th></tr>
+    <tr><td rowspan="5"><strong>Model Overview</strong></td><td>Total Parameters</td><td>1.77 Billion</td></tr>
+    <tr><td>Pruned Parameters</td><td>885 Million (50.00%)</td></tr>
+    <tr><td>Vision Encoder Layers</td><td>27 Encoder Blocks</td></tr>
+    <tr><td>Language Model Layers</td><td>12 Decoder Blocks</td></tr>
+    <tr><td>Action Head (DiT) Layers</td><td>16 Transformer Blocks</td></tr>
+    <tr><td rowspan="2"><strong>Vision Encoder (Layer 0)</strong></td><td>mlp.fc1 / fc2</td><td>50.00%</td></tr>
+    <tr><td>self_attn.(q/k/v/out)_proj</td><td>50.00%</td></tr>
+    <tr><td rowspan="2"><strong>Language Model (Layer 0)</strong></td><td>mlp.gate/up/down_proj</td><td>50.00%</td></tr>
+    <tr><td>self_attn.(q/k/v/o)_proj</td><td>50.00%</td></tr>
+    <tr><td rowspan="2"><strong>Action Head (Block 13)</strong></td><td>ff.net.0.proj / ff.net.2</td><td>50.00%</td></tr>
+    <tr><td>attn1.to_q / to_k / to_v</td><td>50.00%</td></tr>
+    <tr><td><strong>Action Head (Output)</strong></td><td>proj_out_2</td><td>50.00%</td></tr>
+    <tr><td><strong>Total Pruned Weights</strong></td><td>–</td><td>885,340,160 of 1,770,680,320</td></tr>
+  </table>
+
+  <table>
+    <caption><strong>Table A4: Dynamic INT8 Quantization (Language Model Only)</strong></caption>
+    <tr><th>Component</th><th>Detail</th></tr>
+    <tr><td>Quantization Scope</td><td>Language Model (only)</td></tr>
+    <tr><td>Quantized Dtype</td><td><code>qint8</code></td></tr>
+    <tr><td>Total Layers in Model</td><td>2214</td></tr>
+    <tr><td>Total Linear Layers</td><td>1107</td></tr>
+    <tr><td>Quantized Linear Layers</td><td>744</td></tr>
+  </table>
+
+  <table>
+    <caption><strong>Table A5: Structured L2 Pruning Summary (30%)</strong></caption>
+    <tr><th>Scope</th><th>Details</th></tr>
+    <tr><td>Pruning Technique</td><td>Structured (L2-norm), on <code>nn.Linear</code> layers</td></tr>
+    <tr><td>Applied On</td><td>Vision Encoder, Language Model, Action Head</td></tr>
+    <tr><td>Pruned Parameters</td><td>531,203,944 of 1,770,680,320</td></tr>
+    <tr><td>Pruned Ratio</td><td>30.00%</td></tr>
+  </table>
+
+  <table>
+    <caption><strong>Table A6: Key LoRA Injection Parameters</strong></caption>
+    <tr><th>Parameter</th><th>Value / Description</th></tr>
+    <tr><td>LoRA Rank (r)</td><td>8 -- dimensionality of low-rank bottleneck</td></tr>
+    <tr><td>LoRA Scaling (α)</td><td>16 -- scaling factor applied to LoRA output</td></tr>
+    <tr><td>Injection Scope</td><td><code>backbone.model.language_model</code></td></tr>
+    <tr><td>Frozen Parameters</td><td>All except <code>lora_</code> layers are frozen</td></tr>
+  </table>
+
+  <table>
+    <caption><strong>Table A7: Recovery Fine-Tuning Configuration</strong></caption>
+    <tr><th>Parameter</th><th>Value / Description</th></tr>
+    <tr><td>Base Model Path</td><td><code>gr00t_pruned_50_complete</code></td></tr>
+    <tr><td>Dataset</td><td><code>Full_Kuka_Dataset</code></td></tr>
+    <tr><td>Data Config</td><td><code>kuka_custom</code></td></tr>
+    <tr><td>Batch Size</td><td>4</td></tr>
+    <tr><td>Max Steps</td><td>5000</td></tr>
+    <tr><td>Save Steps</td><td>2500</td></tr>
+    <tr><td>Learning Rate</td><td>0.0001</td></tr>
+    <tr><td>Weight Decay</td><td>1e-05</td></tr>
+    <tr><td>Warmup Ratio</td><td>0.05</td></tr>
+    <tr><td>LoRA Rank</td><td>0 (no LoRA used)</td></tr>
+    <tr><td>LoRA Alpha</td><td>16</td></tr>
+    <tr><td>LoRA Dropout</td><td>0.1</td></tr>
+    <tr><td>Tune LLM</td><td>False</td></tr>
+    <tr><td>Tune Vision Tower</td><td>True</td></tr>
+    <tr><td>Tune Projector</td><td>True</td></tr>
+    <tr><td>Tune Diffusion Model</td><td>True</td></tr>
+    <tr><td>Resume Training</td><td>False</td></tr>
+    <tr><td>Number of GPUs</td><td>1 (<code>A100</code>)</td></tr>
+    <tr><td>Embodiment Tag</td><td><code>new_embodiment</code></td></tr>
+  </table>
+
+  <figure>
+    <img src="FT1.png" alt="Recovery Fine-Tuning — Training Loss Curve Behavior">
+    <figcaption><strong>Figure A4:</strong> Recovery Fine-Tuning — Training Loss Curve Behavior</figcaption>
+  </figure>
+  <figure>
+    <img src="FT2.png" alt="Gradient Norm Observations">
+    <figcaption><strong>Figure A5:</strong> Gradient Norm Observations</figcaption>
+  </figure>
+  <figure>
+    <img src="FT3.png" alt="LR Schedule Insight">
+    <figcaption><strong>Figure A6:</strong> LR Schedule Insight</figcaption>
+  </figure>
+</section>
+
 </html>
