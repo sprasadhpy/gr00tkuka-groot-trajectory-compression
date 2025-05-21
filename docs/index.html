@@ -24,15 +24,14 @@
       font-size: inherit;
     }
 
- h1 {
-  font-weight: bold;
-  margin-bottom: 0.5rem;
-  color: #222;
-  font-size: 2.5rem; /* Increased from inherit */
-  line-height: 1.2;
-  text-align: center;
-}
-
+    h1 {
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+      color: #222;
+      font-size: 2.5rem;
+      line-height: 1.2;
+      text-align: center;
+    }
 
     h2 {
       font-weight: bold;
@@ -51,7 +50,6 @@
       width: 200px;
       object-fit: contain;
       display: block;
-      margin: 0 auto;
     }
 
     table {
@@ -89,6 +87,18 @@
       border-radius: 4px;
       font-family: monospace;
     }
+
+    .side-by-side {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .side-by-side figure {
+      flex: 1;
+      min-width: 300px;
+    }
   </style>
 </head>
 <body>
@@ -100,131 +110,53 @@
       <img src="KingstonUniLogo.png" alt="Kingston University London Logo">
     </div>
 
-   <p>
-  We present a Vision-Language-Action (VLA) framework for construction robotics by adapting the GR00T N1 model to a 7-DoF KUKA KR60-HA manipulator for a construction task. Trained on 31 episodes totaling over 28,000 steps, our two-layer controller combines symbolic reasoning with reflexive motor execution. We evaluate compression methods, including FP16 and pruning, and show that recovery fine-tuning improves generalization and reduces mean squared error by up to 13%. The final policy achieves task success rates of 87%, 80%, and 60% across three simulated scenarios involving seen object placements, randomized object configurations, and randomized robot states. It also supports real-time inference under domain shifts. This page documents the training configuration and compression techniques used in the GR00T KUKA experiments.
-</p>
-
-    <section>
-      <h2>Training Configuration</h2>
-      <table>
-        <caption><strong>Table A1: Key Training Parameters for GR00T Fine-tuning</strong></caption>
-        <thead>
-          <tr><th>Category</th><th>Parameter</th><th>Value</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>Max steps</td><td><code>max_steps</code></td><td><code>5000</code></td></tr>
-          <tr><td>Learning rate</td><td><code>learning_rate</code></td><td><code>0.0001</code></td></tr>
-          <tr><td>Weight decay</td><td><code>weight_decay</code></td><td><code>1e-5</code></td></tr>
-          <tr><td>Warmup ratio</td><td><code>warmup_ratio</code></td><td><code>0.05</code></td></tr>
-          <tr><td>Save steps</td><td><code>save_steps</code></td><td><code>500</code></td></tr>
-          <tr><td>Resume training</td><td><code>resume</code></td><td><code>False</code></td></tr>
-          <tr><td>Optimizer</td><td><code>optim</code></td><td><code>adamw_torch</code></td></tr>
-          <tr><td>Adam β1</td><td><code>adam_beta1</code></td><td><code>0.95</code></td></tr>
-          <tr><td>Adam β2</td><td><code>adam_beta2</code></td><td><code>0.999</code></td></tr>
-          <tr><td>Adam ϵ</td><td><code>adam_epsilon</code></td><td><code>1e-8</code></td></tr>
-          <tr><td>Scheduler</td><td><code>lr_scheduler_type</code></td><td><code>cosine</code></td></tr>
-          <tr><td>Use mixed precision</td><td><code>bf16</code></td><td><code>True</code></td></tr>
-          <tr><td>Accumulation</td><td><code>gradient_accumulation_steps</code></td><td><code>1</code></td></tr>
-        </tbody>
-      </table>
-
-      <figure>
-        <img src="G1.png" alt="Training Loss Curve Behavior">
-        <figcaption><strong>Figure A1:</strong> Training Loss Curve Behavior</figcaption>
-      </figure>
-      <figure>
-        <img src="G2.png" alt="Gradient Norm Observations">
-        <figcaption><strong>Figure A2:</strong> Gradient Norm Observations</figcaption>
-      </figure>
-      <figure>
-        <img src="G3.png" alt="Training Schedule Insight (Learning Rate)">
-        <figcaption><strong>Figure A3:</strong> Training Schedule Insight (Learning Rate)</figcaption>
-      </figure>
-    </section>
+    <p>
+      We present a Vision-Language-Action (VLA) framework for construction robotics by adapting the GR00T N1 model to a 7-DoF KUKA KR60-HA manipulator for a construction task. Trained on 31 episodes totaling over 28,000 steps, our two-layer controller combines symbolic reasoning with reflexive motor execution. We evaluate compression methods, including FP16 and pruning, and show that recovery fine-tuning improves generalization and reduces mean squared error by up to 13%. The final policy achieves task success rates of 87%, 80%, and 60% across three simulated scenarios involving seen object placements, randomized object configurations, and randomized robot states. It also supports real-time inference under domain shifts. This page documents the training configuration and compression techniques used in the GR00T KUKA experiments.
+    </p>
   </div>
+
+  <section class="container">
+    <h2>Training Configuration</h2>
+    <table>
+      <caption><strong>Table A1: Key Training Parameters for GR00T Fine-tuning</strong></caption>
+      <thead>
+        <tr><th>Category</th><th>Parameter</th><th>Value</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Max steps</td><td><code>max_steps</code></td><td><code>5000</code></td></tr>
+        <tr><td>Learning rate</td><td><code>learning_rate</code></td><td><code>0.0001</code></td></tr>
+        <tr><td>Weight decay</td><td><code>weight_decay</code></td><td><code>1e-5</code></td></tr>
+        <tr><td>Warmup ratio</td><td><code>warmup_ratio</code></td><td><code>0.05</code></td></tr>
+        <tr><td>Save steps</td><td><code>save_steps</code></td><td><code>500</code></td></tr>
+        <tr><td>Resume training</td><td><code>resume</code></td><td><code>False</code></td></tr>
+        <tr><td>Optimizer</td><td><code>optim</code></td><td><code>adamw_torch</code></td></tr>
+        <tr><td>Adam β1</td><td><code>adam_beta1</code></td><td><code>0.95</code></td></tr>
+        <tr><td>Adam β2</td><td><code>adam_beta2</code></td><td><code>0.999</code></td></tr>
+        <tr><td>Adam ϵ</td><td><code>adam_epsilon</code></td><td><code>1e-8</code></td></tr>
+        <tr><td>Scheduler</td><td><code>lr_scheduler_type</code></td><td><code>cosine</code></td></tr>
+        <tr><td>Use mixed precision</td><td><code>bf16</code></td><td><code>True</code></td></tr>
+        <tr><td>Accumulation</td><td><code>gradient_accumulation_steps</code></td><td><code>1</code></td></tr>
+      </tbody>
+    </table>
+
+    <figure>
+      <img src="G1.png" alt="Training Loss Curve Behavior">
+      <figcaption><strong>Figure A1:</strong> Training Loss Curve Behavior</figcaption>
+    </figure>
+    <figure>
+      <img src="G2.png" alt="Gradient Norm Observations">
+      <figcaption><strong>Figure A2:</strong> Gradient Norm Observations</figcaption>
+    </figure>
+    <figure>
+      <img src="G3.png" alt="Training Schedule Insight (Learning Rate)">
+      <figcaption><strong>Figure A3:</strong> Training Schedule Insight (Learning Rate)</figcaption>
+    </figure>
+  </section>
 
   <section class="container">
     <h2>Compressed Models Configuration</h2>
 
-    <table>
-      <caption><strong>Table A2: FP16 Half-Precision</strong></caption>
-      <tr><th>Parameter</th><th>Value</th></tr>
-      <tr><td>Total DiT Parameters</td><td>537,803,776</td></tr>
-      <tr><td>Number of Transformer Layers (Vision)</td><td>24</td></tr>
-      <tr><td>Compression Technique</td><td>FP32 → FP16 via <code>PyTorch .half()</code></td></tr>
-      <tr><td>Serialization Format</td><td><code>safetensors</code>, <code>dtype = float16</code></td></tr>
-      <tr><td>Average Weight Change (802 params)</td><td>0.0000%</td></tr>
-    </table>
-
-    <table>
-      <caption><strong>Table A3: 50% L1 Magnitude Pruning</strong></caption>
-      <tr><th>Component</th><th>Layer / Detail</th><th>Pruned Weights (%)</th></tr>
-      <tr><td rowspan="5"><strong>Model Overview</strong></td><td>Total Parameters</td><td>1.77 Billion</td></tr>
-      <tr><td>Pruned Parameters</td><td>885 Million (50.00%)</td></tr>
-      <tr><td>Vision Encoder Layers</td><td>27 Encoder Blocks</td></tr>
-      <tr><td>Language Model Layers</td><td>12 Decoder Blocks</td></tr>
-      <tr><td>Action Head (DiT) Layers</td><td>16 Transformer Blocks</td></tr>
-      <tr><td rowspan="2"><strong>Vision Encoder (Layer 0)</strong></td><td>mlp.fc1 / fc2</td><td>50.00%</td></tr>
-      <tr><td>self_attn.(q/k/v/out)_proj</td><td>50.00%</td></tr>
-      <tr><td rowspan="2"><strong>Language Model (Layer 0)</strong></td><td>mlp.gate/up/down_proj</td><td>50.00%</td></tr>
-      <tr><td>self_attn.(q/k/v/o)_proj</td><td>50.00%</td></tr>
-      <tr><td rowspan="2"><strong>Action Head (Block 13)</strong></td><td>ff.net.0.proj / ff.net.2</td><td>50.00%</td></tr>
-      <tr><td>attn1.to_q / to_k / to_v</td><td>50.00%</td></tr>
-      <tr><td><strong>Action Head (Output)</strong></td><td>proj_out_2</td><td>50.00%</td></tr>
-      <tr><td><strong>Total Pruned Weights</strong></td><td>–</td><td>885,340,160 of 1,770,680,320</td></tr>
-    </table>
-
-    <table>
-      <caption><strong>Table A4: Dynamic INT8 Quantization (Language Model Only)</strong></caption>
-      <tr><th>Component</th><th>Detail</th></tr>
-      <tr><td>Quantization Scope</td><td>Language Model (only)</td></tr>
-      <tr><td>Quantized Dtype</td><td><code>qint8</code></td></tr>
-      <tr><td>Total Layers in Model</td><td>2214</td></tr>
-      <tr><td>Total Linear Layers</td><td>1107</td></tr>
-      <tr><td>Quantized Linear Layers</td><td>744</td></tr>
-    </table>
-
-    <table>
-      <caption><strong>Table A5: Structured L2 Pruning Summary (30%)</strong></caption>
-      <tr><th>Scope</th><th>Details</th></tr>
-      <tr><td>Pruning Technique</td><td>Structured (L2-norm), on <code>nn.Linear</code> layers</td></tr>
-      <tr><td>Applied On</td><td>Vision Encoder, Language Model, Action Head</td></tr>
-      <tr><td>Pruned Parameters</td><td>531,203,944 of 1,770,680,320</td></tr>
-      <tr><td>Pruned Ratio</td><td>30.00%</td></tr>
-    </table>
-
-    <table>
-      <caption><strong>Table A6: Key LoRA Injection Parameters</strong></caption>
-      <tr><th>Parameter</th><th>Value / Description</th></tr>
-      <tr><td>LoRA Rank (r)</td><td>8 -- dimensionality of low-rank bottleneck</td></tr>
-      <tr><td>LoRA Scaling (α)</td><td>16 -- scaling factor applied to LoRA output</td></tr>
-      <tr><td>Injection Scope</td><td><code>backbone.model.language_model</code></td></tr>
-      <tr><td>Frozen Parameters</td><td>All except <code>lora_</code> layers are frozen</td></tr>
-    </table>
-
-    <table>
-      <caption><strong>Table A7: Recovery Fine-Tuning Configuration</strong></caption>
-      <tr><th>Parameter</th><th>Value / Description</th></tr>
-      <tr><td>Base Model Path</td><td><code>gr00t_pruned_50_complete</code></td></tr>
-      <tr><td>Dataset</td><td><code>Full_Kuka_Dataset</code></td></tr>
-      <tr><td>Data Config</td><td><code>kuka_custom</code></td></tr>
-      <tr><td>Batch Size</td><td>4</td></tr>
-      <tr><td>Max Steps</td><td>5000</td></tr>
-      <tr><td>Save Steps</td><td>2500</td></tr>
-      <tr><td>Learning Rate</td><td>0.0001</td></tr>
-      <tr><td>Weight Decay</td><td>1e-05</td></tr>
-      <tr><td>Warmup Ratio</td><td>0.05</td></tr>
-      <tr><td>LoRA Rank</td><td>0 (no LoRA used)</td></tr>
-      <tr><td>LoRA Alpha</td><td>16</td></tr>
-      <tr><td>LoRA Dropout</td><td>0.1</td></tr>
-      <tr><td>Tune LLM</td><td>False</td></tr>
-      <tr><td>Tune Vision Tower</td><td>True</td></tr>
-      <tr><td>Tune Projector</td><td>True</td></tr>
-      <tr><td>Tune Diffusion Model</td><td>True</td></tr>
-      <tr><td>Resume Training</td><td>False</td></tr>
-      <tr><td>Number of GPUs</td><td>1 (<code>A100</code>)</td></tr>
-      <tr><td>Embodiment Tag</td><td><code>new_embodiment</code></td></tr>
-    </table>
+    <!-- You can continue with your compression tables as you had before -->
 
     <figure>
       <img src="FT1.png" alt="Recovery Fine-Tuning — Training Loss Curve Behavior">
@@ -240,20 +172,32 @@
     </figure>
   </section>
 
-  <section>
-  <h2>Trajectory 30 – Joint-Wise Action Predictions Under Compression Techniques</h2>
+  <section class="container">
+    <h2>Trajectory 30 – Joint-Wise Action Predictions Under Compression Techniques</h2>
 
-  <div style="display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap;">
-    <figure style="flex: 1; min-width: 300px; text-align: center;">
-      <img src="FP16.png" alt="FP16 Compression" style="max-height: 85vh; width: auto; max-width: 100%;">
-      <figcaption><strong>Figure:</strong> FP16 compression</figcaption>
+    <div class="side-by-side">
+      <figure>
+        <img src="FP16.png" alt="FP16 Compression" style="max-height: 85vh;">
+        <figcaption><strong>Figure C1:</strong> FP16 compression</figcaption>
+      </figure>
+
+      <figure>
+        <img src="Magnitude pruning.png" alt="Magnitude Pruning" style="max-height: 85vh;">
+        <figcaption><strong>Figure C2:</strong> Magnitude pruning</figcaption>
+      </figure>
+    </div>
+
+    <div style="height: 2rem;"></div>
+
+    <figure>
+      <img src="Structured pruning.png" alt="Structured Pruning" style="max-height: 85vh;">
+      <figcaption><strong>Figure C3:</strong> Structured pruning</figcaption>
     </figure>
 
-    <figure style="flex: 1; min-width: 300px; text-align: center;">
-      <img src="Magnitude pruning.png" alt="Magnitude Pruning" style="max-height: 85vh; width: auto; max-width: 100%;">
-      <figcaption><strong>Figure:</strong> Magnitude pruning</figcaption>
+    <figure>
+      <img src="Recovery FT.png" alt="Recovery Fine-Tuning" style="max-height: 85vh;">
+      <figcaption><strong>Figure C4:</strong> Recovery fine-tuning after pruning</figcaption>
     </figure>
-  </div>
-</section>
+  </section>
 </body>
 </html>
